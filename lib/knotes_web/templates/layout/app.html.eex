@@ -4,20 +4,28 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Knotes · Phoenix Framework</title>
+    <title>Knotes</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
     <header>
       <section class="container">
         <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-          </ul>
+          <%= unless signed_in?(@conn) do %>
+            <%= form_for @conn, Routes.session_path(@conn, :create), fn f -> %>
+              <script
+                src="https://trykno.app/pass.js"
+                data-site="kno_local_site_token">
+              </script>
+
+              <%= submit "Sign in" %>
+            <% end %>
+          <% else %>
+            <%= link "Sign out", to: Routes.session_path(@conn, :delete), method: :delete %>
+          <% end %>
         </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
+
+        <h1><a href="/">Knotes</a></h1>
       </section>
     </header>
     <main role="main" class="container">
