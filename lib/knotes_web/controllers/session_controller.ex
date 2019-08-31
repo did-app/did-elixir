@@ -1,5 +1,6 @@
 defmodule KnotesWeb.SessionController do
   use KnotesWeb, :controller
+  alias Knotes.Authentication.Kno
 
   def create(conn, %{"knoToken" => token}) do
     case verify_token(token) do
@@ -25,20 +26,10 @@ defmodule KnotesWeb.SessionController do
   end
 
   defp verify_token(token) do
-    url = "https://api.trykno.app/v0/pass"
-    body = Jason.encode!(%{"token" => token})
-    basic_auth = Enum.join(["alpha", "kno_local_site_token", "kno_local_api_key"], ".") <> ":"
+    client = Kno.client("kno_local_site_token", "kno_local_api_key")
 
-    headers = [
-      {"authorization", "Basic " <> Base.encode64(basic_auth)},
-      {"content-type", "application/json"},
-      {"accept", "application/json"}
-    ]
-
-    case HTTPoison.post(url, body, headers) do
-      {:ok, %{status_code: 200, body: body}} ->
-        %{"persona" => %{"id" => persona_id}} = Jason.decode!(body)
-
+    case Kno.verify_token(client, token) do
+      {:ok, %{status: 200, body: %{"persona" => %{"id" => persona_id}}}} ->
         {:ok, persona_id}
 
       _reply ->

@@ -12,7 +12,7 @@
       <section class="container">
         <nav role="navigation">
           <%= unless signed_in?(@conn) do %>
-            <%= form_for @conn, Routes.session_path(@conn, :create), fn f -> %>
+            <%= form_for @conn, Routes.session_path(@conn, :create), fn _form -> %>
               <script
                 src="https://trykno.app/pass.js"
                 data-site="kno_local_site_token">
