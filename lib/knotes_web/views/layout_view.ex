@@ -4,7 +4,7 @@ defmodule KnotesWeb.LayoutView do
   def signed_in?(conn) do
     case Plug.Conn.get_session(conn, :persona_id) do
       nil -> false
-      _persona_id -> true
+      persona_id when is_binary(persona_id) -> true
     end
   end
 end

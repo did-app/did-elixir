@@ -1,8 +1,4 @@
 defmodule Knotes.Authentication.Kno do
-  def verify_token(client, token) do
-    Tesla.post(client, "/v0/pass", %{"token" => token})
-  end
-
   def client(kno_site_token, kno_api_key) do
     basic_auth = Enum.join(["alpha", kno_site_token, kno_api_key], ".") <> ":"
 
@@ -18,5 +14,9 @@ defmodule Knotes.Authentication.Kno do
     ]
 
     Tesla.client(middleware)
+  end
+
+  def verify_token(client, token) do
+    Tesla.post(client, "/v0/pass", %{"token" => token})
   end
 end

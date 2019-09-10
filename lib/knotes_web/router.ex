@@ -19,10 +19,7 @@ defmodule KnotesWeb.Router do
     get "/", PageController, :index
     post "/sign-in", SessionController, :create
     delete "/sign-out", SessionController, :delete
-  end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", KnotesWeb do
-  #   pipe_through :api
-  # end
+    resources "/notes", NoteController
+  end
 end
