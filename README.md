@@ -14,20 +14,42 @@ The [Phoenix install guide](https://hexdocs.pm/phoenix/installation.html#content
 Let's start a new project for a note taking app, which we shall call `my_notes`.
 We will use Kno to authenticate users and start a session for them.
 
+Kno is great for applications like this, it gives users a slick password free authentication that takes you only a few minutes to integrate.
+
+If you want to try our device based authentication with your local app visit [trykno.app](https://trykno.app) on your mobile.
+
 ```sh
 mix phx.new my_notes --no-webpack
 ```
 
-Open up mix.exs to add HTTPoison and Jason as dependencies.
+Open up `mix.exs` and add HTTPoison and Jason as dependencies.
 
 ```elixir
-{
-  {:jason, "~> 1.0"},
-  {:httpoison, "~> 1.0"},
-}
+defp deps do
+  [
+    # existing dependencies
+    {:jason, "~> 1.1"},
+    {:httpoison, "~> 1.6"},
+  ]
+end
 ```
 
 Then run `mix deps.get` to pull the new dependencies.
+
+Next setup the tokens associated without your application.
+Add the following code to `config/dev.exs`
+
+```elixir
+config :my_notes,
+  kno_site_token: "kno_local_site_token",
+  kno_api_token: "alpha.kno_local_site_token.kno_local_api_key"
+```
+
+*For production you will have keys unique to your application.
+However you can use the tokens in this example as long as your example is running from localhost.*
+
+**Please note that emails will be sent so you can test.
+Ensure you use real emails so not to get blocked from using these credentials for local development**
 
 ## Display sign in/out buttons
 
@@ -40,9 +62,8 @@ Add the following code to `lib/my_notes_web/templates/layout/app.html.eex`, so t
   <%= form_for @conn, Routes.session_path(@conn, :sign_in), fn _form -> %>
     <script
       src="https://trykno.app/pass.js"
-      data-site=<%= Application.get_env(:my_app, :kno_site_token) %>>
+      data-site=<%= Application.get_env(:my_notes, :kno_site_token) %>>
     </script>
-
     <%= submit "Sign in" %>
   <% end %>
 <% end %>
@@ -113,12 +134,12 @@ defmodule MyNotesWeb.SessionController do
 
     url = "https://api.trykno.app/v0/pass"
     headers = [
-      {"authorization", "Bearer #{api_token}"},
+      {"authorization", "Basic #{Base.encode64(api_token <> ":")}"},
       {"content-type", "application/json"}
     ]
     body = Jason.encode!(%{token: token})
 
-    %{status_code: 200, body: response_body} = HTTPoison.post!(url, headers, body)
+    %{status_code: 200, body: response_body} = HTTPoison.post!(url, body, headers)
     %{"persona" => %{"id" => persona_id}} = Jason.decode!(response_body)
     persona_id
   end
