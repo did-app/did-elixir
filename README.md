@@ -11,37 +11,30 @@ The [Phoenix install guide](https://hexdocs.pm/phoenix/installation.html#content
 
 ## Setup project
 
-Let's start a new project.
+Let's start a new project for a note taking app, which we shall call `my_notes`.
+We will use Kno to authenticate users and start a session for them.
 
 ```sh
 mix phx.new my_notes --no-webpack
 ```
 
-## Display sign in or sign out button
-
-Our unauthenticated users need a sign in button to click.
-Once signed in our users need a button to sign out.
-
-In `lib/my_notes_web/views/layout_view.ex` create a helper function to tell if our user is authenticated or not.
+Open up mix.exs to add HTTPoison and Jason as dependencies.
 
 ```elixir
-def authenticated?(conn) do
-  case Plug.Conn.get_session(conn, :persona_id) do
-    persona_id when is_binary(persona_id) ->
-      true
-
-    nil ->
-      false
-  end
-end
+{
+  {:jason, "~> 1.0"},
+  {:httpoison, "~> 1.0"},
+}
 ```
 
-A session with a `persona_id` present is authenticated for that persona, otherwise unauthenticated.
+Then run `mix deps.get` to pull the new dependencies.
+
+## Display sign in/out buttons
 
 Add the following code to `lib/my_notes_web/templates/layout/app.html.eex`, so that a user can sign in or out from any page.
 
 ```eex
-<%= if authenticated?(conn) do %>
+<%= if authenticated?(@conn) do %>
   <%= link "Sign out", to: Routes.session_path(@conn, :sign_out) %>
 <% else %>
   <%= form_for @conn, Routes.session_path(@conn, :sign_in), fn _form -> %>
@@ -55,16 +48,30 @@ Add the following code to `lib/my_notes_web/templates/layout/app.html.eex`, so t
 <% end %>
 ```
 
-Authenticated users see a link to the `sign_out` action found on the `MyNotesWebs.Session` controller.
-For unauthenticated users a form that will submit to the `sign_in` action on the `MyNotesWebs.Session` controller is displayed.
+The `authenticated?` function is a helper that we define later.
 
-Inside the form we use the Kno [HTML integration](https://trykno.com/docs/#kno-now).
-The `pass.js` script automatically handles authenticating users when inside a form tag.
-The script requires that a site token is set, we are pulling the site token from the application configuration for our application.
-When the user clicks the sign in button they will be authenticated.
-A one time `passToken` will be added to the form before it is submitted to the `sign_in` action.
+For authenticated users a link to sign out is shown.
+This link points to the `:sign_out` action found on the `MyNotesWeb.Session` controller.
 
-*The Kno integration works the same way for sign-in and sign-up, therefore we only need to show one button.*
+Authenticated users see a button that will start the process of signing in.
+
+Here we are using the [simple Kno integration](https://trykno.com/docs/#kno-now) as it is fastest way to get started.
+When the form is submitted a sign in overlay is shown and once the user has been authenticated a pass token is added to the form.
+This form, and the pass token within it is submitted to the`:sign_in` action on the `MyNotesWeb.Session` controller.
+
+The helper function to tell if our user is authenticated is defined in `lib/my_notes_web/views/layout_view.ex`.
+
+```elixir
+def authenticated?(conn) do
+  case Plug.Conn.get_session(conn, :persona_id) do
+    persona_id when is_binary(persona_id) ->
+      true
+
+    nil ->
+      false
+  end
+end
+```
 
 ## Create our session controller
 
@@ -87,7 +94,7 @@ Next, let's create our session controller and add these actions.
 defmodule MyNotesWeb.SessionController do
   use MyNotesWeb, :controller
 
-  def create(conn, %{"knoToken" => token}) do
+  def sign_in(conn, %{"knoToken" => token}) do
     persona_id = verify_token!(token)
 
     conn
@@ -95,7 +102,7 @@ defmodule MyNotesWeb.SessionController do
     |> redirect(to: "/")
   end
 
-  def delete(conn, _params) do
+  def sign_out(conn, _params) do
     conn
     |> clear_session()
     |> redirect(to: "/")
