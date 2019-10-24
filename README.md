@@ -1,4 +1,5 @@
 # Kno Elixir
+**[Kno](https://trykno.com) is a service for secure and simple passwordless authentication**
 
 Documentation and examples for using [trykno.com](https://trykno.com) in Elixir applications
 
@@ -11,12 +12,13 @@ The [Phoenix install guide](https://hexdocs.pm/phoenix/installation.html#content
 
 ## Setup project
 
-Let's start a new project for a note taking app, which we shall call `my_notes`.
+Start a new project.
+We are going to build a note taking app, which we shall call `my_notes`.
 We will use Kno to authenticate users and start a session for them.
+<!--
+Kno is great for applications like this, it gives users a slick password free authentication that takes you only a few minutes to integrate. -->
 
-Kno is great for applications like this, it gives users a slick password free authentication that takes you only a few minutes to integrate.
-
-If you want to try our device based authentication with your local app visit [trykno.app](https://trykno.app) on your mobile.
+<!-- If you want to try our device based authentication with your local app visit [trykno.app](https://trykno.app) on your mobile. -->
 
 ```sh
 mix phx.new my_notes --no-webpack
