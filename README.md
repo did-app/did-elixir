@@ -148,8 +148,130 @@ defmodule MyNotesWeb.SessionController do
 end
 ```
 
-Add protection here and for the router
+## Protecting routes
 
+Once a user has signed in they can Create Read Update & Delete (CRUD) notes that belong to them.
+All of these paths can by defined at once.
+Add the following code to `lib/my_notes_web/router.ex`.
+
+```elixir
+scope "/notes", KnotesWeb do
+  pipe_through [:browser, :ensure_authenticated]
+
+  resources "/", NoteController
+end
+
+def ensure_authenticated(conn, _) do
+  case get_session(conn, :persona_id) do
+    nil ->
+      conn
+      |> put_flash(:error, "You don't have permission to access that page")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+
+    persona_id when is_binary(persona_id) ->
+      conn
+      |> assign(:persona_id, persona_id)
+  end
+end
+```
+
+Every client request to interact with a note is first passed through the `ensure_authenticated` plug.
+This plug checks that the session contains a persona_id.
+For unauthenticated sessions the request is redirected with an error and halted.
+If a persona_id was present it is added as an assign property on the plug, the request will then continue up the pipeline to be handled by the notes controller.
+
+## Create a notes controller
+
+Now it's time to create a controller for users to work with there notes.
+This will live in `lib/my_notes_web/controllers/notes_controller.ex`.
+
+```elixir
+defmodule MyNotesWeb.NotesController do
+  use MyNotesWeb, :controller
+
+  def index(conn, _params) do
+    %{persona_id: persona_id} = conn.assigns
+
+    notes = MyNotes.list_notes(persona_id)
+    render(conn, "index.html", notes: notes)
+  end
+
+  def new(conn, _params) do
+    %{persona_id: persona_id} = conn.assigns
+
+    # Shrinkk this
+    changeset = MyNotes.change_note(%Note{persona_id: persona_id})
+    render(conn, "new.html", changeset: changeset)
+  end
+
+  def create(conn, %{"note" => note_params}) do
+    %{persona_id: persona_id} = conn.assigns
+
+    case MyNotes.create_note(note_params, persona_id) do
+      {:ok, note} ->
+        conn
+        |> put_flash(:info, "Note created successfully.")
+        |> redirect(to: Routes.note_path(conn, :show, note))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
+  end
+
+  def show(conn, %{"id" => id}) do
+    %{persona_id: persona_id} = conn.assigns
+
+    note = MyNotes.get_note!(id, persona_id)
+    render(conn, "show.html", note: note)
+  end
+
+  def edit(conn, %{"id" => id}) do
+    %{persona_id: persona_id} = conn.assigns
+
+    note = MyNotes.get_note!(id, persona_id)
+    changeset = MyNotes.change_note(note)
+    render(conn, "edit.html", note: note, changeset: changeset)
+  end
+
+  def update(conn, %{"id" => id, "note" => note_params}) do
+    %{persona_id: persona_id} = conn.assigns
+
+    note = MyNotes.get_note!(id, persona_id)
+
+    case MyNotes.update_note(note, note_params) do
+      {:ok, note} ->
+        conn
+        |> put_flash(:info, "Note updated successfully.")
+        |> redirect(to: Routes.note_path(conn, :show, note))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "edit.html", note: note, changeset: changeset)
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    %{persona_id: persona_id} = conn.assigns
+
+    note = MyNotes.get_note!(id, persona_id)
+    {:ok, _note} = MyNotes.delete_note(note)
+
+    conn
+    |> put_flash(:info, "Note deleted successfully.")
+    |> redirect(to: Routes.note_path(conn, :index))
+  end
+end
+```
+*Should this be a Note or Notes controller?*
+
+Every action can extract the persona_id from the assign property of the conn,
+relying on authentication to be handled by the ensure_authenticated plug.
+
+The `MyNotes` module is the interface to the business logic of managing notes.
+For this guide we do not need to worry about the implementation.
+However if you want to see how to do it using Ecto and the database take a look at [example]('examples/phoenix-integration') in this repo.
+
+<!--
 ## Saving notes in the database
 
 Add a migration to create a notes table so that the application can save notes in the database.
@@ -180,7 +302,7 @@ end
 Create the file `lib/my_notes/note.ex` in which we will add the Ecto model for accessing notes in the database.
 
 ```elixir
-defmodule Knotes.Notes.Note do
+defmodule MyNotes.Note do
   use Ecto.Schema
 
   schema "notes" do
@@ -201,49 +323,70 @@ defmodule Knotes.Notes.Note do
   end
 end
 ```
-## CRUD for notes
 
-```elixir
-resources "/notes", NoteController
+
+
+
+Keep list of notes because its one persona to n where profile will be one to oneet
+
+    note
+    |> cast(attrs, [:title, :content])
+    |> validate_required([:persona_id, :title, :content])
+  end
+end
 ```
-*Should this be a Note or Notes controller?*
 
-Once a user is authenticated they should be able to Create Read Update & Delete (CRUD) their notes.
-For each operation a route needs to be added to the router
+defmodule MyNotes do
 
-Let's create a new `MyNotesWeb.NotesController`, don't forget we will need to add all these actions to the router
+  import Ecto.Query, warn: false
 
-```elixir
-defmodule MyNotesWeb.NotesController do
-  use MyNotesWeb, :controller
+  alias MyNotes.Note
+  alias MyNotes.Repo
 
-  plug :ensure_authenticated
-
-  def ensure_authenticated(conn, _) do
-    case get_session(conn, :persona_id) do
-      nil ->
-        conn
-        |> put_flash(:error, "You don't have permission to access that page")
-        |> redirect(to: Routes.page_path(conn, :index))
-        |> halt()
-
-      persona_id when is_binary(persona_id) ->
-        conn
-        |> assign(:persona_id, persona_id)
-    end
+  @doc """
+  Returns the list of notes for a given persona id.
+  """
+  def list_notes(persona_id) when is_binary(persona_id) do
+    from(n in Note, where: n.persona_id == ^persona_id, order_by: :inserted_at)
+    |> Repo.all()
   end
 
-  def create(conn, %{note: note_params}) do
-    %{persona_id: persona_id} = conn.assigns
+  @doc """
+  Gets a single note owned by a persona.
+  """
+  def get_note!(id, persona_id), do: Repo.get_by!(Note, id: id, persona_id: persona_id)
 
-    # Or just have a function you call
-    note = %Note{persona_id: persona_id}
+  @doc """
+  Creates a note for a persona.
+  """
+  def create_note(attrs, persona_id) do
+    %Note{persona_id: persona_id}
     |> Note.changeset(attrs)
-    |> MyNotes.Repo.insert()
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates an existing note.
+  """
+  def update_note(%Note{} = note, attrs) do
+    note
+    |> Note.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Note.
+  """
+  def delete_note(%Note{} = note) do
+    Repo.delete(note)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking note changes.
+  """
+  def change_note(%Note{} = note) do
+    Note.changeset(note, %{})
   end
 end
 
-```
-
-Note + Lib + migration + controller
-Keep list of notes because its one persona to n where profile will be one to one
+Keep list of notes because its one persona to n where profile will be one to one -->
