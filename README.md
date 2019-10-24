@@ -186,10 +186,10 @@ If a persona_id was present it is added as an assign property on the plug, the r
 ## Create a notes controller
 
 Now it's time to create a controller for users to work with there notes.
-This will live in `lib/my_notes_web/controllers/notes_controller.ex`.
+This will live in `lib/my_notes_web/controllers/note_controller.ex`.
 
 ```elixir
-defmodule MyNotesWeb.NotesController do
+defmodule MyNotesWeb.NoteController do
   use MyNotesWeb, :controller
 
   def index(conn, _params) do
@@ -412,16 +412,16 @@ end
     <tr>
       <td><%= note.title %></td>
       <td>
-        <%= link "Show", to: Routes.notes_path(@conn, :show, note) %> &middot;
-        <%= link "Edit", to: Routes.notes_path(@conn, :edit, note) %> &middot;
-        <%= link "Delete", to: Routes.notes_path(@conn, :delete, note), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Show", to: Routes.note_path(@conn, :show, note) %> &middot;
+        <%= link "Edit", to: Routes.note_path(@conn, :edit, note) %> &middot;
+        <%= link "Delete", to: Routes.note_path(@conn, :delete, note), method: :delete, data: [confirm: "Are you sure?"] %>
       </td>
     </tr>
   <% end %>
   </tbody>
 </table>
 
-<span><%= link "Create Note", to: Routes.notes_path(@conn, :new) %></span>
+<span><%= link "Create Note", to: Routes.note_path(@conn, :new) %></span>
 ```
 
 Keep list of notes because its one persona to n where profile will be one to one -->
