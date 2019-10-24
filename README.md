@@ -36,7 +36,9 @@ end
 
 Then run `mix deps.get` to pull the new dependencies.
 
-Next setup the tokens associated without your application.
+## Configure API and site tokens
+
+Next configure the tokens associated without your application.
 Add the following code to `config/dev.exs`
 
 ```elixir
@@ -94,9 +96,9 @@ def authenticated?(conn) do
 end
 ```
 
-## Create our session controller
+## Handle sign in/out actions
 
-The router needs to know about the actions we are adding to our session controller.
+Update the router to point the actions we added to a new session controller.
 In `lib/my_notes_web/router.ex` add the two routes to the top level `"/"` scope.
 
 ```elixir
@@ -109,7 +111,7 @@ scope "/", HelloWeb do
 end
 ```
 
-Next, let's create our session controller and add these actions.
+Create a session controller and add the two new actions.
 
 ```elixir
 defmodule MyNotesWeb.SessionController do
@@ -146,9 +148,69 @@ defmodule MyNotesWeb.SessionController do
 end
 ```
 
+Add protection here and for the router
+
+## Saving notes in the database
+
+Add a migration to create a notes table so that the application can save notes in the database.
+
+```shell
+mix ecto.gen.migration create_notes
+```
+
+In the generated file at `/priv/repo/migrations/[timestamp]_create_notes.exs` create a table for notes with a title content and persona_id.
+
+```elixir
+defmodule MyNotes.Repo.Migrations.CreateNotes do
+  use Ecto.Migration
+
+  def change do
+    create table(:notes) do
+      add :persona_id, :binary_id, null: false
+
+      add :title, :text, null: false
+      add :content, :text, null: false
+    end
+
+    create index(:notes, :persona_id)
+  end
+end
+```
+
+Create the file `lib/my_notes/note.ex` in which we will add the Ecto model for accessing notes in the database.
+
+```elixir
+defmodule Knotes.Notes.Note do
+  use Ecto.Schema
+
+  schema "notes" do
+    field :persona_id, :binary_id
+    field :title, :string
+    field :content, :string
+
+    timestamps(type: :utc_datetime)
+  end
+
+  @doc false
+  def changeset(note, attrs) do
+    import Ecto.Changeset
+
+    note
+    |> cast(attrs, [:title, :content])
+    |> validate_required([:persona_id, :title, :content])
+  end
+end
+```
 ## CRUD for notes
 
-Now we know who are user is they should be able to Create Read Update & Delete (CRUD) their notes.
+```elixir
+resources "/notes", NoteController
+```
+*Should this be a Note or Notes controller?*
+
+Once a user is authenticated they should be able to Create Read Update & Delete (CRUD) their notes.
+For each operation a route needs to be added to the router
+
 Let's create a new `MyNotesWeb.NotesController`, don't forget we will need to add all these actions to the router
 
 ```elixir
@@ -180,4 +242,8 @@ defmodule MyNotesWeb.NotesController do
     |> MyNotes.Repo.insert()
   end
 end
+
 ```
+
+Note + Lib + migration + controller
+Keep list of notes because its one persona to n where profile will be one to one
