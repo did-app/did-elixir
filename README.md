@@ -155,7 +155,9 @@ All of these paths can by defined at once.
 Add the following code to `lib/my_notes_web/router.ex`.
 
 ```elixir
-scope "/notes", KnotesWeb do
+alias MyNotesWeb.Router.Helpers, as: Routes
+
+scope "/notes", MyNotesWeb do
   pipe_through [:browser, :ensure_authenticated]
 
   resources "/", NoteController
@@ -200,8 +202,8 @@ defmodule MyNotesWeb.NotesController do
   def new(conn, _params) do
     %{persona_id: persona_id} = conn.assigns
 
-    # Shrinkk this
-    changeset = MyNotes.change_note(%Note{persona_id: persona_id})
+    # Shrinkk this, the struct is a pain ideally just functions
+    changeset = MyNotes.change_note(%MyNotes.Note{persona_id: persona_id})
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -309,8 +311,6 @@ defmodule MyNotes.Note do
     field :persona_id, :binary_id
     field :title, :string
     field :content, :string
-
-    timestamps(type: :utc_datetime)
   end
 
   @doc false
@@ -336,6 +336,7 @@ Keep list of notes because its one persona to n where profile will be one to one
 end
 ```
 
+```
 defmodule MyNotes do
 
   import Ecto.Query, warn: false
@@ -388,5 +389,39 @@ defmodule MyNotes do
     Note.changeset(note, %{})
   end
 end
+```
+
+```
+defmodule MyNotesWeb.NoteView do
+  use MyNotesWeb, :view
+end
+```
+
+```
+<h1>Your Notes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <%= for note <- @notes do %>
+    <tr>
+      <td><%= note.title %></td>
+      <td>
+        <%= link "Show", to: Routes.notes_path(@conn, :show, note) %> &middot;
+        <%= link "Edit", to: Routes.notes_path(@conn, :edit, note) %> &middot;
+        <%= link "Delete", to: Routes.notes_path(@conn, :delete, note), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<span><%= link "Create Note", to: Routes.notes_path(@conn, :new) %></span>
+```
 
 Keep list of notes because its one persona to n where profile will be one to one -->
