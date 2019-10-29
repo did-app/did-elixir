@@ -371,7 +371,7 @@ end
 
 No extra functionallity is needed in this view, so all that remains is to create the following templates.
 
-`index.html.eex`
+*index.html.eex*
 ```eex
 <h1>New Note</h1>
 
