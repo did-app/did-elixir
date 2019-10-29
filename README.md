@@ -1,7 +1,9 @@
 # Kno Elixir
-**[trykno.com](https://trykno.com) secure and simple passwordless authentication. Get started authenticating users 10 minutes.**
+**[trykno.com](https://trykno.com) secure and simple passwordless authentication. Start authenticating users in 10 minutes.**
 
 - [Phoenix integration guide](#phoenix-integration-guide)
+- [community](https://forgetpasswords.com)
+- Get in touch [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir question)
 
 # Phoenix integration guide
 
@@ -11,7 +13,7 @@ The [Phoenix install guide](https://hexdocs.pm/phoenix/installation.html#content
 ## Setup project
 
 We are going to build a note taking app called `my_notes`.
-Kno will allow us to authenticate users and protect their notes.
+[Kno](https://trykno.com) will allow us to authenticate users and protect their notes.
 
 ```sh
 mix phx.new my_notes --no-webpack
@@ -380,7 +382,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
-`form.html.eex`
+*form.html.eex*
 ```eex
 <%= form_for @changeset, @action, fn f -> %>
   <%= if @changeset.action do %>
@@ -403,7 +405,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <% end %>
 ```
 
-`new.html.eex`
+*new.html.eex*
 ```eex
 <h1>New Note</h1>
 
@@ -412,8 +414,8 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
+*show.html.eex*
 ```eex
-/* show.html.eex */
 <h2><%= @note.title %></h2>
 
 <div class="preformatted">
@@ -426,7 +428,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
-`edit.html.eex`
+*edit.html.eex*
 ```eex
 <h1>Edit Note</h1>
 
@@ -473,7 +475,8 @@ If a persona_id was present it is added as an assign property on the plug, the r
 
 ## Try it out
 
-visit localhost
-get in touch team@trykno.com
+At this point we have a working notes application.
+Try it out by visiting [localhost:4000](http://localhost:4000).
+If you have had any trouble you can pull the finished example [here](examples/phoenix-integration)
 
-Have any questions
+If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir question).
