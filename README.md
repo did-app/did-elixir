@@ -412,8 +412,8 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
-`show.html.eex`
 ```eex
+/* show.html.eex */
 <h2><%= @note.title %></h2>
 
 <div class="preformatted">
