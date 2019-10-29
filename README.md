@@ -49,7 +49,7 @@ config :my_notes,
 However you can use the tokens in this example as long as your example is running from localhost.*
 
 **Please note that emails will be sent so you can test.
-Ensure you use real emails so not to get blocked from using these credentials for local development**
+Ensure you use real email addresses so you do not get blocked from using these credentials for local development**
 
 ## Display sign in/out buttons
 
@@ -76,11 +76,11 @@ This link points to the `:sign_out` action found on the `MyNotesWeb.Session` con
 
 Authenticated users see a button that will start the process of signing in.
 
-Here we are using the [simple Kno integration](https://trykno.com/docs/#kno-now) as it is fastest way to get started.
-When the form is submitted a sign in overlay is shown and once the user has been authenticated a pass token is added to the form.
-This form, and the pass token within it is submitted to the`:sign_in` action on the `MyNotesWeb.Session` controller.
+Here we are using the [simple Kno integration](https://trykno.com/docs/#kno-now) as it is the fastest way to get started.
+When the form is submitted, a sign in overlay is shown and once the user has been authenticated a pass token is added to the form.
+This form, and the pass token within it, is submitted to the`:sign_in` action on the `MyNotesWeb.Session` controller.
 
-The helper function to tell if our user is authenticated is defined in `lib/my_notes_web/views/layout_view.ex`.
+The helper function, used to tell if our user is authenticated, is defined in `lib/my_notes_web/views/layout_view.ex`.
 
 ```elixir
 def authenticated?(conn) do
@@ -108,7 +108,7 @@ scope "/", HelloWeb do
 end
 ```
 
-Create a session controller to handle updating the users session when a user logs in or out.
+Create a session controller to handle updating the users session when a user signs in or out.
 Add to `lib/my_notes_web/controllers/session_controller.ex`.
 
 ```elixir
@@ -150,7 +150,7 @@ The `verify_token` function makes a single API call to upgrade the token submitt
 The information returned from this call identifies a persona specific to your application rather than sensitive user data.
 For this guide the difference between a persona and user is not important.
 
-Once authenticated the session controller adds the persona_id to the session.
+Once authenticated, the session controller adds the persona_id to the session.
 
 ## Try out sign in/out
 
@@ -173,7 +173,7 @@ mix ecto.gen.migration create_notes
 ```
 
 In the generated file at `/priv/repo/migrations/[timestamp]_create_notes.exs` create a table for notes with a title content persona_id and timestamps.
-The timestamps is so a user can see the notes in the order they created them
+The timestamps are used so a user can see the notes in the order they created them.
 
 ```elixir
 defmodule MyNotes.Repo.Migrations.CreateNotes do
@@ -280,7 +280,7 @@ The `MyNotes` module provides an interface for all these actions.
 
 ## Create a notes controller and views
 
-Now it's time to create a controller for users to work with there notes.
+Now it's time to create a controller for users to work with their notes.
 This will live in `lib/my_notes_web/controllers/note_controller.ex`.
 
 ```elixir
@@ -373,7 +373,7 @@ defmodule MyNotesWeb.NoteView do
 end
 ```
 
-No extra functionallity is needed in this view, so all that remains is to create the following templates.
+No extra functionallity is needed in this view, so all that remains is to create the following templates:
 
 *lib/my_notes_web/templates/note/index.html.eex*
 ```eex
@@ -500,4 +500,4 @@ At this point we have a working notes application.
 Try it out by visiting [localhost:4000](http://localhost:4000/notes).
 If you have had any trouble you can pull the finished example [here](examples/phoenix_integration)
 
-If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
+If you have any further questions or want to find out more about Kno, visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
