@@ -17,6 +17,7 @@ We are going to build a note taking app called `my_notes`.
 
 ```sh
 mix phx.new my_notes --no-webpack
+cd my_notes
 ```
 
 Open up `mix.exs` and add HTTPoison and Jason as dependencies.
@@ -192,6 +193,7 @@ end
 ```
 
 Then run `mix ecto.migrate` to apply the migration to your database.
+Before running this for the first time you will need to run `mix ecto.create`.
 
 Create the file `lib/my_notes/note.ex` in which we will add the Ecto model for accessing notes in the database.
 
