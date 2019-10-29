@@ -1,7 +1,7 @@
 # Kno Elixir
 **[trykno.com](https://trykno.com) secure and simple passwordless authentication. Start authenticating users in 10 minutes.**
 
-- [Phoenix integration guide](#phoenix-integration-guide)
+- [Phoenix integration guide](#phoenix_integration-guide)
 - [community](https://forgetpasswords.com)
 - Get in touch [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question)
 
@@ -477,6 +477,6 @@ If a persona_id was present it is added as an assign property on the plug, the r
 
 At this point we have a working notes application.
 Try it out by visiting [localhost:4000](http://localhost:4000).
-If you have had any trouble you can pull the finished example [here](examples/phoenix-integration)
+If you have had any trouble you can pull the finished example [here](examples/phoenix_integration)
 
 If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
