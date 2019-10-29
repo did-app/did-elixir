@@ -3,7 +3,7 @@
 
 - [Phoenix integration guide](#phoenix-integration-guide)
 - [community](https://forgetpasswords.com)
-- Get in touch [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir question)
+- Get in touch [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question)
 
 # Phoenix integration guide
 
@@ -479,4 +479,4 @@ At this point we have a working notes application.
 Try it out by visiting [localhost:4000](http://localhost:4000).
 If you have had any trouble you can pull the finished example [here](examples/phoenix-integration)
 
-If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir question).
+If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
