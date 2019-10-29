@@ -1,7 +1,5 @@
 # Kno Elixir
-**[Kno](https://trykno.com) is a service for secure and simple passwordless authentication**
-
-Documentation and examples for using [trykno.com](https://trykno.com) in Elixir applications
+**[trykno.com](https://trykno.com) secure and simple passwordless authentication. Get started authenticating users 10 minutes.**
 
 - [Phoenix integration guide](#phoenix-integration-guide)
 
@@ -12,13 +10,8 @@ The [Phoenix install guide](https://hexdocs.pm/phoenix/installation.html#content
 
 ## Setup project
 
-Start a new project.
-We are going to build a note taking app, which we shall call `my_notes`.
-We will use Kno to authenticate users and start a session for them.
-<!--
-Kno is great for applications like this, it gives users a slick password free authentication that takes you only a few minutes to integrate. -->
-
-<!-- If you want to try our device based authentication with your local app visit [trykno.app](https://trykno.app) on your mobile. -->
+We are going to build a note taking app called `my_notes`.
+Kno will allow us to authenticate users and protect their notes.
 
 ```sh
 mix phx.new my_notes --no-webpack
@@ -100,8 +93,7 @@ end
 
 ## Handle sign in/out actions
 
-Update the router to point the actions we added to a new session controller.
-In `lib/my_notes_web/router.ex` add the two routes to the top level `"/"` scope.
+In `lib/my_notes_web/router.ex` add the two routes to the top level `"/"` scope pointing to a `SessionController`.
 
 ```elixir
 scope "/", HelloWeb do
@@ -113,7 +105,7 @@ scope "/", HelloWeb do
 end
 ```
 
-Create a session controller and add the two new actions.
+Create a session controller to handle updating the users session when a user logs in or out.
 
 ```elixir
 defmodule MyNotesWeb.SessionController do
@@ -150,7 +142,13 @@ defmodule MyNotesWeb.SessionController do
 end
 ```
 
-## Protecting routes
+The `verify_token` function makes a single API call to upgrade the token submitted from the client to the persona information.
+The information returned from this call identifies a persona specific to your application rather than sensitive user data.
+For this guide the difference between a persona and user is not important.
+
+Once authenticated the session controller adds the persona_id to the session.
+
+## Protect note routes
 
 Once a user has signed in they can Create Read Update & Delete (CRUD) notes that belong to them.
 All of these paths can by defined at once.
@@ -266,16 +264,15 @@ defmodule MyNotesWeb.NoteController do
   end
 end
 ```
-*Should this be a Note or Notes controller?*
 
 Every action can extract the persona_id from the assign property of the conn,
 relying on authentication to be handled by the ensure_authenticated plug.
 
 The `MyNotes` module is the interface to the business logic of managing notes.
 For this guide we do not need to worry about the implementation.
-However if you want to see how to do it using Ecto and the database take a look at [example]('examples/phoenix-integration') in this repo.
+However if you want to see how to do it using Ecto and the database read the next section or take a look at the [phoenix integration example]('examples/phoenix-integration') in this repo.
 
-<!--
+
 ## Saving notes in the database
 
 Add a migration to create a notes table so that the application can save notes in the database.
@@ -284,7 +281,8 @@ Add a migration to create a notes table so that the application can save notes i
 mix ecto.gen.migration create_notes
 ```
 
-In the generated file at `/priv/repo/migrations/[timestamp]_create_notes.exs` create a table for notes with a title content and persona_id.
+In the generated file at `/priv/repo/migrations/[timestamp]_create_notes.exs` create a table for notes with a title content persona_id and timestamps.
+The timestamps is so a user can see the notes in the order they created them
 
 ```elixir
 defmodule MyNotes.Repo.Migrations.CreateNotes do
@@ -293,9 +291,9 @@ defmodule MyNotes.Repo.Migrations.CreateNotes do
   def change do
     create table(:notes) do
       add :persona_id, :binary_id, null: false
-
       add :title, :text, null: false
       add :content, :text, null: false
+      timestamps(type: :utc_datetime)
     end
 
     create index(:notes, :persona_id)
@@ -313,6 +311,7 @@ defmodule MyNotes.Note do
     field :persona_id, :binary_id
     field :title, :string
     field :content, :string
+    timestamps(type: :utc_datetime)
   end
 
   @doc false
