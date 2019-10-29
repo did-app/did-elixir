@@ -66,3 +66,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :my_notes,
+  kno_site_token: "kno_local_site_token",
+  kno_api_token: "alpha.kno_local_site_token.kno_local_api_key"

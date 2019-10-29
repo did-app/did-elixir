@@ -17,6 +17,8 @@ defmodule MyNotesWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/sign-in", SessionController, :sign_in
+    get "/sign-out", SessionController, :sign_out
   end
 
   # Other scopes may use custom stacks.
