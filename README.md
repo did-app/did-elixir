@@ -365,7 +365,7 @@ relying on authentication to be handled at a before.
 
 We will ensure that authentication is always handled by writing a plug that will be added to the pipeline before the controller is called.
 
-Add a view module to generate the `render` functions used in this controller.
+Add a view module in `lib/my_notes_web/views/note_view.ex` to generate the `render` functions used in this controller.
 
 ```elixir
 defmodule MyNotesWeb.NoteView do
@@ -375,16 +375,35 @@ end
 
 No extra functionallity is needed in this view, so all that remains is to create the following templates.
 
-*index.html.eex*
+*lib/my_notes_web/templates/note/index.html.eex*
 ```eex
-<h1>New Note</h1>
+<h1>Your Notes</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.note_path(@conn, :create)) %>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <%= for note <- @notes do %>
+    <tr>
+      <td><%= note.title %></td>
+      <td>
+        <%= link "Show", to: Routes.note_path(@conn, :show, note) %> &middot;
+        <%= link "Edit", to: Routes.note_path(@conn, :edit, note) %> &middot;
+        <%= link "Delete", to: Routes.note_path(@conn, :delete, note), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
-<span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
+<span><%= link "Create Note", to: Routes.note_path(@conn, :new) %></span>
 ```
 
-*form.html.eex*
+*lib/my_notes_web/templates/note/form.html.eex*
 ```eex
 <%= form_for @changeset, @action, fn f -> %>
   <%= if @changeset.action do %>
@@ -407,7 +426,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <% end %>
 ```
 
-*new.html.eex*
+*lib/my_notes_web/templates/note/new.html.eex*
 ```eex
 <h1>New Note</h1>
 
@@ -416,7 +435,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
-*show.html.eex*
+*lib/my_notes_web/templates/note/show.html.eex*
 ```eex
 <h2><%= @note.title %></h2>
 
@@ -430,7 +449,7 @@ No extra functionallity is needed in this view, so all that remains is to create
 <span><%= link "Back", to: Routes.note_path(@conn, :index) %></span>
 ```
 
-*edit.html.eex*
+*lib/my_notes_web/templates/note/edit.html.eex*
 ```eex
 <h1>Edit Note</h1>
 
@@ -478,7 +497,7 @@ If a persona_id was present it is added as an assign property on the plug, the r
 ## Try it out
 
 At this point we have a working notes application.
-Try it out by visiting [localhost:4000](http://localhost:4000).
+Try it out by visiting [localhost:4000](http://localhost:4000/notes).
 If you have had any trouble you can pull the finished example [here](examples/phoenix_integration)
 
 If you have any further questions or want to find out more about kno visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
