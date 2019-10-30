@@ -6,7 +6,7 @@ defmodule MyNotesWeb.SessionController do
 
     conn
     |> put_session(:persona_id, persona_id)
-    |> redirect(to: "/")
+    |> redirect(to: "/notes")
   end
 
   def sign_out(conn, _params) do

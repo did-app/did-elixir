@@ -120,7 +120,7 @@ defmodule MyNotesWeb.SessionController do
 
     conn
     |> put_session(:persona_id, persona_id)
-    |> redirect(to: "/")
+    |> redirect(to: "/notes")
   end
 
   def sign_out(conn, _params) do
@@ -162,6 +162,8 @@ mix phx.server
 
 visit [localhost:4000](http://localhost:4000) and try signing in and out.
 At this point our application can't do any more than this.
+
+![screenshot of the sign in page](images/sign-in-page.png)
 
 ## Saving notes in the database
 
@@ -499,5 +501,7 @@ If a persona_id was present it is added as an assign property on the plug, the r
 At this point we have a working notes application.
 Try it out by visiting [localhost:4000](http://localhost:4000/notes).
 If you have had any trouble you can pull the finished example [here](examples/phoenix_integration)
+
+![screenshot of the list notes page](images/notes-pages.png)
 
 If you have any further questions or want to find out more about Kno, visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
