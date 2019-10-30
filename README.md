@@ -502,6 +502,6 @@ At this point we have a working notes application.
 Try it out by visiting [localhost:4000](http://localhost:4000/notes).
 If you have had any trouble you can pull the finished example [here](examples/phoenix_integration)
 
-![screenshot of the list notes page](images/notes-pages.png)
+![screenshot of the list notes page](images/notes-page.png)
 
 If you have any further questions or want to find out more about Kno, visit [trykno.com](https://trykno.com) or contact us at [team@trykno.com](mailto:team@trykno.com?subject=Kno-Elixir%20question).
