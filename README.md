@@ -41,8 +41,8 @@ Add the following code to `config/dev.exs`
 
 ```elixir
 config :my_notes,
-  kno_site_token: "kno_local_site_token",
-  kno_api_token: "alpha.kno_local_site_token.kno_local_api_key"
+  kno_site_token: "site_UITYJw8kQJilzVnux5VOPw",
+  kno_api_token: "API_AAAAAgDOxdmUqKpE9rw82Jj0Y6DM"
 ```
 
 *For production you will have keys unique to your application.
