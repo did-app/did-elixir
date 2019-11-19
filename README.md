@@ -62,7 +62,7 @@ Add the following code to `lib/my_notes_web/templates/layout/app.html.eex`, so t
   <%= form_for @conn, Routes.session_path(@conn, :sign_in), fn _form -> %>
     <script
       src="https://trykno.app/pass.js"
-      data-site=<%= Application.get_env(:my_notes, :kno_site_token) %>>
+      data-site="<%= Application.get_env(:my_notes, :kno_site_token) %>">
     </script>
     <%= submit "Sign in" %>
   <% end %>
