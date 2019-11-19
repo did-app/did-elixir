@@ -77,8 +77,10 @@ This link points to the `:sign_out` action found on the `MyNotesWeb.Session` con
 Authenticated users see a button that will start the process of signing in.
 
 Here we are using the [simple Kno integration](https://trykno.com/docs/#kno-now) as it is the fastest way to get started.
-When the form is submitted, a sign in overlay is shown and once the user has been authenticated a pass token is added to the form.
-This form, and the pass token within it, is submitted to the`:sign_in` action on the `MyNotesWeb.Session` controller.
+When the form is submitted, a sign in overlay is shown. Once the client has been authenticated by token is added to a **knoToken** field in the form.
+This form, and the **knoToken**, are submitted to the`:sign_in` action on the `MyNotesWeb.Session` controller.
+
+### Define the authenticated? helper.
 
 The helper function, used to tell if our user is authenticated, is defined in `lib/my_notes_web/views/layout_view.ex`.
 
@@ -132,7 +134,7 @@ defmodule MyNotesWeb.SessionController do
   defp verify_token!(token) do
     api_token = Application.get_env(:my_notes, :kno_api_token)
 
-    url = "https://api.trykno.app/v0/pass"
+    url = "https://api.trykno.app/v0/authenticate"
     headers = [
       {"authorization", "Basic #{Base.encode64(api_token <> ":")}"},
       {"content-type", "application/json"}
