@@ -9,7 +9,7 @@ defmodule Kno.API do
     url = api_host <> @authenticate_path
 
     headers = [
-      {"authorization", "Bearer " <> api_token},
+      {"authorization", "Basic #{Base.encode64(api_token <> ":")}"},
       {"content-type", "application/json"}
     ]
 

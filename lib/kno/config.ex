@@ -11,8 +11,8 @@ defmodule Kno.Config do
 
   @api_host "https://api.trykno.app"
   @cdn_host "https://trykno.app"
-  @api_token ""
-  @site_token ""
+  @api_token "API_AAAAAgDOxdmUqKpE9rw82Jj0Y6DM"
+  @site_token "site_UITYJw8kQJilzVnux5VOPw"
 
   def init(options) do
     api_host = Keyword.get(options, :api_host, @api_host)

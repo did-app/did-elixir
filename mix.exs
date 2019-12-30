@@ -24,6 +24,7 @@ defmodule Kno.MixProject do
   defp deps do
     [
       {:jason, "~> 1.0"},
+      {:httpoison, "~> 1.0"},
       {:plug, "~> 1.8", optional: true},
       {:phoenix_html, "~> 2.13", optional: true},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}

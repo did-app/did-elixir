@@ -11,7 +11,7 @@ defmodule Kno.Plug.Session do
     conn = Plug.Conn.fetch_session(conn)
 
     case conn.request_path do
-      "/authenticate" ->
+      "/session/new" ->
         new_session(conn, config)
 
       "/session/terminate" ->
@@ -27,12 +27,13 @@ defmodule Kno.Plug.Session do
   end
 
   defp new_session(conn, config) do
+    %Kno.Config{success_redirect: success_redirect} = config
     kno_token = fetch_kno_token(conn)
     persona_id = authenticate(kno_token, config)
 
     conn
     |> Plug.Conn.put_session("kno_persona_id", persona_id)
-    |> redirect("/TODO")
+    |> redirect(success_redirect)
   end
 
   defp fetch_kno_token(conn) do
@@ -58,7 +59,7 @@ defmodule Kno.Plug.Session do
   defp terminate_session(conn, _config) do
     conn
     |> Plug.Conn.clear_session()
-    |> redirect("/TODO")
+    |> redirect("/")
   end
 
   defp redirect(conn, path) do
