@@ -68,5 +68,5 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :my_notes,
-  kno_site_token: "kno_local_site_token",
-  kno_api_token: "alpha.kno_local_site_token.kno_local_api_key"
+  kno_site_token: "site_UITYJw8kQJilzVnux5VOPw",
+  kno_api_token: "API_AAAAAgDOxdmUqKpE9rw82Jj0Y6DM"
