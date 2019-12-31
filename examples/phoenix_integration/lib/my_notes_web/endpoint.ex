@@ -42,5 +42,8 @@ defmodule MyNotesWeb.Endpoint do
     key: "_my_notes_key",
     signing_salt: "CLKUyLZF"
 
+  plug Kno.Plug.Session,
+    success_redirect: "/notes"
+
   plug MyNotesWeb.Router
 end

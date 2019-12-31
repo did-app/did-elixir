@@ -17,8 +17,6 @@ defmodule MyNotesWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    post "/sign-in", SessionController, :sign_in
-    get "/sign-out", SessionController, :sign_out
   end
 
   alias MyNotesWeb.Router.Helpers, as: Routes
@@ -30,7 +28,7 @@ defmodule MyNotesWeb.Router do
   end
 
   def ensure_authenticated(conn, _) do
-    case get_session(conn, :persona_id) do
+    case Kno.Plug.persona_id(conn) do
       nil ->
         conn
         |> put_flash(:error, "You don't have permission to access that page")
