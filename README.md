@@ -16,14 +16,14 @@ defp deps do
 end
 ```
 
-Run mix deps.get to install it.
+Run `mix deps.get` to install it.
 
 ## Get started with Phoenix
 
 #### Configure Kno
 
 Add `Kno.Plug.Session` to you applications endpoint file, found at `lib/my_app_web/endpoint.exs`.
-Must be added **after** `Plug.Session`.
+Must be added after `Plug.Session`.
 
 ```elixir
 defmodule MyAppWeb.Endpoint do
@@ -51,7 +51,7 @@ Add the sign in and out buttons to your template. To have the buttons on every p
 
 #### Check user is authenticated
 
-Accessing the authenticated user in controllers can be used by fetching the `persona_id` that identifies the user.
+Controllers can fetch the `persona_id` that identifies the user. `nil` is returned if unauthenticated.
 
 ```elixir
 case Kno.Plug.persona_id(conn) do
@@ -65,9 +65,9 @@ end
 ### Local development
 
 Authentication is now setup for local development.
-Restart your phoenix application and visit a page that shows the sign in button.
+Restart your phoenix application and click the sign in button.
 
-![Example of local sign in page](/images/local-sign-in-page.png)
+![Example of local sign in page](assets/images/local-sign-in-page.png)
 
 Enter your **real** email address. Kno runs a service for local development that sends a limited number of emails.
 

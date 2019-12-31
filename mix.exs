@@ -4,11 +4,12 @@ defmodule Kno.MixProject do
   def project do
     [
       app: :kno,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
+      docs: [extras: ["README.md"], main: "readme", assets: "assets"],
       package: package(),
       source_url: "https://github.com/trykno/kno-elixir",
       homepage_url: "https://trykno.com"
