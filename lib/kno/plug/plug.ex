@@ -1,11 +1,17 @@
 defmodule Kno.Plug do
   import Phoenix.HTML, only: [sigil_E: 2]
 
+  def persona_id(conn) do
+    {:ok, persona_id} = Map.fetch(conn.private, :kno_persona_id)
+    # TODO create a kno.config error.
+    persona_id
+  end
+
   def session_buttons(conn) do
     %Kno.Config{cdn_host: cdn_host, site_token: site_token} = conn.private.kno_config
 
-    case Map.fetch(conn.private, :kno_persona_id) do
-      {:ok, nil} ->
+    case persona_id(conn) do
+      nil ->
         ~E"""
         <form action="/session/new">
           <script
@@ -16,7 +22,7 @@ defmodule Kno.Plug do
         </form>
         """
 
-      {:ok, _persona_id} ->
+      _persona_id ->
         ~E"""
         <form action="/session/terminate">
           <button type="submit">Sign out</button>

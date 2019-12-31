@@ -33,7 +33,7 @@ defmodule Kno.MixProject do
 
   defp description do
     """
-    This simplest way to add passwordless authentication to your application.
+    The simplest way to add passwordless authentication to your application.
     """
   end
 
