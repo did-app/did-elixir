@@ -67,6 +67,8 @@ end
 Authentication is now setup for local development.
 Restart your phoenix application and visit a page that shows the sign in button.
 
+![Example of local sign in page](/images/local-sign-in-page.png)
+
 Enter your **real** email address. Kno runs a service for local development that sends a limited number of emails.
 
 ### Get production keys
