@@ -1,4 +1,27 @@
 defmodule Kno.Plug.Session do
+  @moduledoc """
+  A Plug that handles user authentication using sessions.
+
+  ## Usage
+
+  Add this plug to a pipeline of plugs, it must be added after `Plug.Session`
+
+  ```
+  plug Kno.Plug.Session,
+    success_redirect: "/",
+    site_token: "[MY_SITE_TOKEN]"
+    api_token: "[MY_API_TOKEN]"
+  ```
+
+  ### Options
+  - **success_redirect**: path to redirect the client to after successfully authenticating.
+  - **site_token**: identifies your site with Kno. If not provided sets as a value for local development.
+  - **api_token**: authenticates your server with the Kno API. If not provided sets as a value for local development.
+
+  #### Tokens
+
+  Tokens can be generated for your application, in your [trykno.com](https://trykno.com) account.
+  """
   @behaviour Plug
 
   @impl Plug
