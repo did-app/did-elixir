@@ -1,6 +1,6 @@
 defmodule Kno.RequestError do
   defexception message: "Could not complete authentication, invalid request",
-               actions: ["Doth ethe thing"]
+               actions: ["Do the thing"]
 end
 
 defimpl Plug.Exception, for: Kno.RequestError do
