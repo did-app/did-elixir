@@ -2,14 +2,15 @@
 
 DID is an Identity Provider, that authenticates users by verifying access to either an email address or securely stored private key. [did.app](https://did.app)
 
-## OpenID Connect
-
-DID can be integrated into your application using any OpenID connect client library.
-
-- https://hex.pm/packages/openid_connect
-
 ## Examples
 
-This repo contains Elixir applications that DID authentication.
+This repo contains Elixir applications that use DID authentication.
 
-- [Phoenix]()
+- [Phoenix](examples/elixir-phoenix-openid-connect)
+
+## Where's the library?
+
+There is no specific DID library needed to integrate with [did.app](https://did.app)
+The openid connect library is all that is required.
+
+Instead follow our guide for [using did with phoenix]().
