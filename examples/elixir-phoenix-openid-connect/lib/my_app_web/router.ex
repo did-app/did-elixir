@@ -17,6 +17,8 @@ defmodule MyAppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/session/authenticate", SessionController, :authenticate
+    get "/session/callback", SessionController, :callback
   end
 
   # Other scopes may use custom stacks.
